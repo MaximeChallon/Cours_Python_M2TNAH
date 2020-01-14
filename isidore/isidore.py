@@ -94,6 +94,18 @@ def run(query, full, output_file):
     """ Exécute une recherche sur Isidore.science
     """
 
+#fonction avec un argument
+@click.command()
+@click.argument("query", type=str)
+def run(query):
+    """ Exécute une recherche sur Isidore.science en utilisant [QUERY]
+    """
+    nb_items, total_page, items, next_page = cherche_isidore(query)
+    print("Nombre de résultats : {}".format(nb_items))
+    print("Nombre de résultats affichés : {}".format(len(items)))
+    for item in items:
+        print("{}; {}".format(item["title"], "& ".join(item["author"])))
+
 # Si ce fichier est le fichier exécuté directement par python
 # Alors on exécute la commande
 if __name__ == "__main__":
