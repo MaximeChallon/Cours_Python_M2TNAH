@@ -88,6 +88,7 @@ def cherche_isidore(q, full=False, page=1):
 
     return nb_items, total_page, items, next_page
 
+#lancer dans le shell python3 isidore.py --help
 @click.command()
 def run(query, full, output_file):
     """ Exécute une recherche sur Isidore.science
