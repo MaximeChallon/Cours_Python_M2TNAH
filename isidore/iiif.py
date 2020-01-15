@@ -1,86 +1,50 @@
 import click
-import requests
-import math
 import csv
+import requests
 
-ISIDORE = "http://gallica.bnf.fr/iiif/ark:/12148/btv1b84259980/manifest.json"
+def iiif_csv(ark, nom_csv):
+    colonnes = ["Numéro", "Nom de Page", "Lien image", "Largeur", "Longueur"]
+    # Complétez avec la documentation'
+    # LA REPONSE pour la requete HTTP GET sur l'adresse composee par l'ARK
+    r = requests.get("http://gallica.bnf.fr/iiif/" + ark + "/manifest.json")
+    # Permet de lire le contenu de la reponse json en tant que python
+    # CAD de parser le body de la reponse http
+    data = r.json()
 
+    for x in data["metadata"]:
+        print(x["label"] + " " + x["value"])
 
-def parser_reponse_gallica(data):
-    """ Fait une recherche sur Gallica
+    with open(nom_csv, "w") as f:
+        csv_writer = csv.writer(f)
+        csv_writer.writerow(colonnes)
+        numero = 0
+        for canvases in data["sequences"][0]["canvases"]:
+            numero += 1
+            nom_de_page = canvases["label"]
+            lien_image = canvases["images"][0]["resource"]["@id"]
+            largeur = canvases["width"]
+            longueur = canvases["height"]
+            csv_writer.writerow([numero, nom_de_page, lien_image, largeur, longueur])
 
-    :param data: JSON Parsed Data
-    :type q: dict
-    :returns: Tuple (
-        Nombre de Résultats,
-        Nombre de Pages,
-        Liste de résultat sous forme de dictionnaire {title, desc, author, date}
-    )
-    """
-    # On récupère le nombre de résultats
-    nb_items = len(data["sequences"][0]["canvases"])
-    # On récupère le nombre de résultats par page
-    items_per_page = 1
-    # Le nombre total de pages est l'arrondi supérieur de la division nb_items / items_per_page
-    total_page = math.ceil(nb_items / items_per_page)
-
-    # On crée une liste vide dans laquelle on enregistrera les données
-    items = []
-    # Pour chaque réponse
-    for item in data["sequences"][0]["canvases"]:
-        # On ajoute à items un nouvel objet
-        items.append({
-            "uri": item["@id"],
-            "title": item["label"],
-            # dictionnaire.get(cle, valeur-par-defaut) : valeur-par-defaut est utilisée si clé n'est
-            # pas présente
-            "date": data["metadata"][6].get("valeur", "0000")
-        })
-
-    return nb_items, total_page, items
+    return None
 
 
-def cherche_gallica(q, full=False, page=1):
-    """ Chercher sur isidore en faisant une requête
-
-    :param q: Chaine de recherche
-    :type q: str
-    :param full: Recherche complète (itère sur toutes les pages)
-    :type full: bool
-    :param page: Page à récupérer
-    :type page: int
-    :returns: Tuple (
-        Nombre de Résultats,
-        Nombre de Pages,
-        Liste de résultat sous forme de dictionnaire {uri, title, desc, author, date}
-    )
-    """
-
-    # On exécute la requête
-    params = {"output": "json", "q": q, "page": page}
-    req = requests.get(ISIDORE, params=params)
-
-    # On la parse
-    nb_items, total_page, items = parser_reponse_gallica(req.json())
-
-    if full:
-        # On la parse
-        nb_items, total_page, new_items= cherche_gallica(q=q, full=full, page=next_page)
-        # On ajoute chacune des valeurs d'items à total_items
-        items.extend(new_items)
-
-    return nb_items, total_page, items
+# Testez le code ici
+# iiif_csv("ark:/12148/btv1b84259980", "out_iiif.csv")
 
 @click.command()
-@click.argument("query", type=str)
-def run(query):
-    """ Exécute une recherche sur Isidore.science en utilisant [QUERY]
+@click.argument("ark", type=str)
+@click.argument("nom_csv", type=str)
+def run(ark, nom_csv):
+    """ Exécute une recherche sur Gallica à partir de l'identifiant ark, et exporte les données dans un csv
+        :param ark: identifiant ark du manuscrit
+        :type ark: string
+        :param nom_csv: nom du fichier csv d'écriture des données
+        :type nom_csv: string
+        :returns: rien
+        :rtype: None
     """
-    nb_items, total_page, items = cherche_gallica(query)
-    print("Nombre de résultats : {}".format(nb_items))
-    print("Nombre de résultats affichés : {}".format(len(items)))
-    for item in items:
-        print("{}".format(item["title"]))
+    iiif_csv(ark, nom_csv)
 
 # Si ce fichier est le fichier exécuté directement par python
 # Alors on exécute la commande
