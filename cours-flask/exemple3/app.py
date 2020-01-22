@@ -8,6 +8,7 @@ def index():
     return "Hello world !"
 
 
+# typage du paramètre en integer
 @app.route("/places/<int:place_id>")
 def chemin_place(place_id):
     return "On est sur " + str(place_id)

@@ -8,6 +8,7 @@ def index():
     return "Hello world !"
 
 
+# le paramètre de l'url doit être du même nom que le paramètre de la fonction
 @app.route("/places/<place_id>")
 def chemin_place(place_id):
     return "On est sur " + place_id
