@@ -19,3 +19,4 @@ styles
 pages.csv
 *.sqlite
 isidore/venv/
+isidore/env
