@@ -97,10 +97,12 @@ def run(query, full, output_file):
 #fonction avec un argument
 @click.command()
 @click.argument("query", type=str)
-def run(query):
+@click.option("-f", "--full",  is_flag=True, default=False,
+              help="Browse every page of results")
+def run(query, full):
     """ Exécute une recherche sur Isidore.science en utilisant [QUERY]
     """
-    nb_items, total_page, items, next_page = cherche_isidore(query)
+    nb_items, total_page, items, next_page = cherche_isidore(query, full=full)
     print("Nombre de résultats : {}".format(nb_items))
     print("Nombre de résultats affichés : {}".format(len(items)))
     for item in items:
