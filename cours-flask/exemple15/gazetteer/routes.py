@@ -29,6 +29,10 @@ def recherche():
     motclef = request.args.get("keyword", None)
     page = request.args.get("page", 1)
 
+    # isinstance : est-ce que page est une instance de la classe string, donc ce qu'il y a dans page est-elle une chaîne et caractère?
+    # page is digit: est-ce que la châine de caractère représente un nombre? Donc si j'ai une string et si elle est un nombre, alors je peux la caster en int
+    # sinon page vaut 1
+    # on rajoute cette condition car on ne peux pas faire confiance à l'utilisateur
     if isinstance(page, str) and page.isdigit():
         page = int(page)
     else:
