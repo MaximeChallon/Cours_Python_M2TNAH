@@ -23,8 +23,5 @@ db = SQLAlchemy(app)
 # On met en place la gestion d'utilisateur-rice-s
 login = LoginManager(app)
 
-# ça se trouve ici car pour faire le @app.route, il faut que app soit définie; et comme PYhton exécute son code ligne
-# après ligne, les routes doivent être mises ici, après la configuration de app, sinon on tourne dans le vide entre
-# routes.py qui appelle ..app et app.py qui appelerait direct import routes, sans avoir configuré app avant : on évite
-# l'import circulaire
-from . import routes
+
+import gazetteer.routes

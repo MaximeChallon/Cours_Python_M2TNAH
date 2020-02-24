@@ -1,10 +1,10 @@
 from flask import render_template, request, flash, redirect
 
 
-from .app import app, login
-from .modeles.donnees import Place
-from .modeles.utilisateurs import User
-from .constantes import LIEUX_PAR_PAGE
+from gazetteer.app import app, login
+from gazetteer.modeles.donnees import Place
+from gazetteer.modeles.utilisateurs import User
+from gazetteer.constantes import LIEUX_PAR_PAGE
 from flask_login import login_user, current_user, logout_user
 
 
@@ -126,7 +126,6 @@ def connexion():
             flash("Les identifiants n'ont pas été reconnus", "error")
 
     return render_template("pages/connexion.html")
-# doit pointer vers le formulaire de connexion: connexion est ici le nom de la fonction de la route de la page de connexion
 login.login_view = 'connexion'
 
 
