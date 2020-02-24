@@ -126,6 +126,7 @@ def connexion():
             flash("Les identifiants n'ont pas été reconnus", "error")
 
     return render_template("pages/connexion.html")
+# doit pointer vers le formulaire de connexion: connexion est ici le nom de la fonction de la route de la page de connexion
 login.login_view = 'connexion'
 
 
