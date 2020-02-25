@@ -1,0 +1,29 @@
+{% extends "conteneur.html" %}
+
+{% block titre %}
+    {%if lieu %}| Mise à jour lieu : {{lieu.place_nom}} ({{lieu.place_id}}) {% endif %}
+{% endblock %}
+
+{% block corps %}
+    {% if lieu %}
+    	<form method="POST" 
+    		action="{{ url_for('lieu_update', place_id=lieu.place_id) }}">
+
+    		<input type="text" name="nom" placeholder="Nom du lieu" 
+    			value="{{lieu.place_nom}}" />
+    		<br />
+    		<textarea name="place_description">{{lieu.place_description}}</textarea>
+    		<br />
+    		<input type="text" name="type" placeholder="Type du lieu" 
+    			value="{{lieu.place_type}}" />
+    		<br />
+    		<input type="number" step="0.000001" name="longitude" placeholder="Longitude du lieu" 
+    			value="{{lieu.place_longitude}}" />
+    		<br />
+    		<input type="number" step="0.000001" name="latitude" placeholder="Latitude du lieu" 
+    			value="{{lieu.place_latitude}}" />
+    		<br />
+    		<button type="submit" class="btn btn-primary">SUBMIT</button>
+    	</form>
+    {% endif %}
+{% endblock %}
